@@ -40,4 +40,12 @@ public class ProductService {
             return productRepository.save(existingProduct);
         });
     }
+    // --- Dodawanie ilości w magazynie ---
+    public Optional<Product> addQuantity(String ean, int amount) {
+        return productRepository.findById(ean).map(product -> {
+            int newQuantity = product.getStockQuantity() + amount; // stockQuantity w encji
+            product.setStockQuantity(newQuantity);
+            return productRepository.save(product);
+        });
+    }
 }

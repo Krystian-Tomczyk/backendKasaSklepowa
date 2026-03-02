@@ -48,6 +48,17 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build()); // Jeśli nie znaleziono kodu, zwróć 404 Not Found
     }
 
+    // --- DOSTAWA (ZWIĘKSZENIE STANU) ---
+    // Przykład: PATCH /api/products/addQuantity/5449000130389?amount=50
+    @PatchMapping("/addQuantity/{ean}")
+    public ResponseEntity<Product> addQuantity(@PathVariable String ean, @RequestParam int amount) {
+        System.out.println("=== Dostawa: " + ean + " (+ " + amount + " szt.) ===");
+
+        return productService.addQuantity(ean, amount)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     // --- DODAWANIE PRODUKTU ---
     // Przykład: POST /api/products z ciałem JSON
     @PostMapping
