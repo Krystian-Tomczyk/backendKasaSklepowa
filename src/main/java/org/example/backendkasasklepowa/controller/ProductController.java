@@ -38,10 +38,31 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // --- AKTUALIZACJA PRODUKTU ---
+    // Przykład: PUT /api/products/update/590123456
+    @PutMapping("/update/{barcode}")
+    public ResponseEntity<Product> updateProduct(@PathVariable String barcode, @RequestBody Product productDetails) {
+        System.out.println("=== Aktualizacja produktu: " + barcode + " ===");
+        return productService.updateProduct(barcode, productDetails)
+                .map(ResponseEntity::ok) // Jeśli znaleziono i zaktualizowano, zwróć 200 OK + produkt
+                .orElse(ResponseEntity.notFound().build()); // Jeśli nie znaleziono kodu, zwróć 404 Not Found
+    }
+
     // --- DODAWANIE PRODUKTU ---
     // Przykład: POST /api/products z ciałem JSON
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
+
+        System.out.println("=== Odebrany produkt ===");
+        System.out.println("Kod kreskowy: " + product.getBarcode());
+        System.out.println("Nazwa: " + product.getName());
+        System.out.println("Opis: " + product.getDescription());
+        System.out.println("Cena: " + product.getPrice());
+        System.out.println("Ilość na stanie: " + product.getStockQuantity());
+        System.out.println("========================");
+
         return productService.saveProduct(product);
     }
+
+
 }

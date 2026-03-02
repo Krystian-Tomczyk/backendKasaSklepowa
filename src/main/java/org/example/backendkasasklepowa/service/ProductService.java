@@ -28,4 +28,15 @@ public class ProductService {
         // Tutaj można dodać walidację, np. czy cena > 0
         return productRepository.save(product);
     }
+    public Optional<Product> updateProduct(String barcode, Product productDetails) {
+        return productRepository.findByBarcode(barcode).map(existingProduct -> {
+            // Podmieniamy dane (nie zmieniamy ID, Spring sam zajmie się aktualizacją istniejącego rekordu)
+            existingProduct.setName(productDetails.getName());
+            existingProduct.setDescription(productDetails.getDescription());
+            existingProduct.setPrice(productDetails.getPrice());
+            existingProduct.setStockQuantity(productDetails.getStockQuantity());
+            // Zapisujemy zaktualizowany produkt
+            return productRepository.save(existingProduct);
+        });
+    }
 }
