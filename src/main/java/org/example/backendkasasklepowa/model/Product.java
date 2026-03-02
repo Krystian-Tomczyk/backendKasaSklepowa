@@ -1,43 +1,27 @@
 package org.example.backendkasasklepowa.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Data // Lombok: generuje gettery, settery, toString
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "products")
+@Table(name = "produkty")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // Kod kreskowy (ważne dla skanera)
-    @Column(unique = true, nullable = false)
+    @Column(name = "ean")
     private String barcode;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
-    // Cena (BigDecimal jest lepszy do pieniędzy niż double)
+    @Column(name = "price")
     private BigDecimal price;
 
-    // Ilość na stanie
+    @Column(name = "stockQuantity")
     private int stockQuantity;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getBarcode() {
         return barcode;

@@ -21,7 +21,7 @@ public class ProductService {
     }
 
     public Optional<Product> getProductByBarcode(String barcode) {
-        return productRepository.findByBarcode(barcode);
+        return productRepository.findById(barcode);
     }
 
     public Product saveProduct(Product product) {
@@ -29,13 +29,14 @@ public class ProductService {
         return productRepository.save(product);
     }
     public Optional<Product> updateProduct(String barcode, Product productDetails) {
-        return productRepository.findByBarcode(barcode).map(existingProduct -> {
-            // Podmieniamy dane (nie zmieniamy ID, Spring sam zajmie się aktualizacją istniejącego rekordu)
+        return productRepository.findById(barcode).map(existingProduct -> {
+
+            // aktualizujemy pola (NIE zmieniamy barcode, bo to klucz główny)
             existingProduct.setName(productDetails.getName());
             existingProduct.setDescription(productDetails.getDescription());
             existingProduct.setPrice(productDetails.getPrice());
             existingProduct.setStockQuantity(productDetails.getStockQuantity());
-            // Zapisujemy zaktualizowany produkt
+
             return productRepository.save(existingProduct);
         });
     }
