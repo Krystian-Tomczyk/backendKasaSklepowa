@@ -1,5 +1,6 @@
 package org.example.backendkasasklepowa.controller;
 
+import org.example.backendkasasklepowa.cart.SaleRequest;
 import org.example.backendkasasklepowa.model.Product;
 import org.example.backendkasasklepowa.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,15 @@ public class ProductController {
         System.out.println("========================");
 
         return productService.saveProduct(product);
+    }
+
+    @PostMapping("/sale")public ResponseEntity<?> finalizeSale(@RequestBody SaleRequest request) {
+        try {
+            productService.processSale(request.getItems());
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
