@@ -5,7 +5,9 @@ import org.example.backendkasasklepowa.model.Product;
 import org.example.backendkasasklepowa.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -13,9 +15,12 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final RestTemplate restTemplate;
+    private final String BLIK_URL = "http://localhost:8082/api/blik";
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, RestTemplate restTemplate) {
         this.productService = productService;
+        this.restTemplate = restTemplate;
     }
 
     // --- API TESTOWE ---
@@ -83,6 +88,21 @@ public class ProductController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+
+    // --- ENDPOINTY POŚREDNICZĄCE DLA KASY WPF ---
+
+    @PostMapping("/blik/initiate")
+    public ResponseEntity<String> initiateBlik(@RequestParam String code, @RequestParam BigDecimal amount, @RequestParam String storeName) {
+        String url = BLIK_URL + "/initiate?code=" + code + "&amount=" + amount + "&storeName=" + storeName;
+        return restTemplate.postForEntity(url, null, String.class);
+    }
+
+    @GetMapping("/blik/status/{code}")
+    public ResponseEntity<String> checkBlikStatus(@PathVariable String code) {
+        String url = BLIK_URL + "/status/" + code;
+        return restTemplate.getForEntity(url, String.class);
     }
 
 
