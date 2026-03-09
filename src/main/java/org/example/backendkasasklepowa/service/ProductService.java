@@ -1,8 +1,11 @@
 package org.example.backendkasasklepowa.service;
 
+import org.example.backendkasasklepowa.cart.SaleItem;
+import org.example.backendkasasklepowa.cart.SaleRequest;
 import org.example.backendkasasklepowa.model.Product;
 import org.example.backendkasasklepowa.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,4 +51,17 @@ public class ProductService {
             return productRepository.save(product);
         });
     }
+
+    @Transactional
+    public void processSale(List<SaleItem> items) {
+    for (SaleItem item : items) {
+        Product product = productRepository.findById(item.getBarcode()).orElseThrow(() -> new RuntimeException("Produkt nie istnieje: " + item.getBarcode()));
+        if (product.getStockQuantity() < item.getQuantity()) {
+            throw new RuntimeException("Brak towaru: " + product.getName());
+        }
+
+        product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+        productRepository.save(product);
+    }
+}
 }
