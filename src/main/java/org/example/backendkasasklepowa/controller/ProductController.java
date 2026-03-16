@@ -17,6 +17,7 @@ public class ProductController {
     private final ProductService productService;
     private final RestTemplate restTemplate;
     private final String BLIK_URL = "http://192.168.0.102:8082/api/blik";
+    private final String BANK_URL = "http://localhost:8081/api/bank";
 
     public ProductController(ProductService productService, RestTemplate restTemplate) {
         this.productService = productService;
@@ -103,6 +104,17 @@ public class ProductController {
     public ResponseEntity<String> checkBlikStatus(@PathVariable String code) {
         String url = BLIK_URL + "/status/" + code;
         return restTemplate.getForEntity(url, String.class);
+    }
+
+    @PostMapping("/card/charge")
+    public ResponseEntity<String> processCardPayment(
+            @RequestParam String cardUid,
+            @RequestParam BigDecimal amount,
+            @RequestParam String storeName) {
+        String description = "Zakupy w: " + storeName;
+        String url = BANK_URL + "/card/charge?cardUid=" + cardUid + "&amount=" + amount + "&description=" + description;
+        // Wysyłamy żądanie ściągnięcia kasy do Banku
+        return restTemplate.postForEntity(url, null, String.class);
     }
 
 
