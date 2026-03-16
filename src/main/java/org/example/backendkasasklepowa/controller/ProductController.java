@@ -16,7 +16,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final RestTemplate restTemplate;
-    private final String BLIK_URL = "http://localhost:8082/api/blik";
+    private final String BLIK_URL = "http://192.168.0.102:8082/api/blik";
 
     public ProductController(ProductService productService, RestTemplate restTemplate) {
         this.productService = productService;
