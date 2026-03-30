@@ -6,6 +6,7 @@ import org.example.backendkasasklepowa.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,12 +17,16 @@ public class ProductController {
 
     private final ProductService productService;
     private final RestTemplate restTemplate;
-    private final String BLIK_URL = "http://192.168.0.102:8082/api/blik";
-    private final String BANK_URL = "http://192.168.0.102:8081/api/bank";
+    private final String BLIK_URL;
+    private final String BANK_URL;
 
-    public ProductController(ProductService productService, RestTemplate restTemplate) {
+
+    public ProductController(ProductService productService, RestTemplate restTemplate, @Value("${server.blik.url}") String blikUrl, @Value("${server.bank.url}") String bankUrl
+    ) {
         this.productService = productService;
         this.restTemplate = restTemplate;
+        this.BLIK_URL = blikUrl;
+        this.BANK_URL = bankUrl;
     }
 
     // --- API TESTOWE ---
