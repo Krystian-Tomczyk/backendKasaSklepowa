@@ -21,7 +21,7 @@ public class ProductController {
     private final String BANK_URL;
 
 
-    public ProductController(ProductService productService, RestTemplate restTemplate, @Value("${server.blik.url}") String blikUrl, @Value("${server.bank.url}") String bankUrl
+    public ProductController(ProductService productService, RestTemplate restTemplate, @Value("${blik.url}") String blikUrl, @Value("${bank.url}") String bankUrl
     ) {
         this.productService = productService;
         this.restTemplate = restTemplate;
