@@ -115,10 +115,17 @@ public class ProductController {
     public ResponseEntity<String> processCardPayment(
             @RequestParam String cardUid,
             @RequestParam BigDecimal amount,
+            @RequestParam(required = false) String pin, // DODANO PIN
             @RequestParam String storeName) {
+
         String description = "Zakupy w: " + storeName;
         String url = BANK_URL + "/card/charge?cardUid=" + cardUid + "&amount=" + amount + "&description=" + description;
-        // Wysyłamy żądanie ściągnięcia kasy do Banku
+
+        // Dodajemy PIN do URL jeśli istnieje
+        if (pin != null && !pin.isEmpty()) {
+            url += "&pin=" + pin;
+        }
+
         return restTemplate.postForEntity(url, null, String.class);
     }
 
