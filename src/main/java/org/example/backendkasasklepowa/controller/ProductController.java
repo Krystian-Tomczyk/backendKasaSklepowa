@@ -115,11 +115,26 @@ public class ProductController {
     public ResponseEntity<String> processCardPayment(
             @RequestParam String cardUid,
             @RequestParam BigDecimal amount,
+            @RequestParam(required = false) String pin,
             @RequestParam String storeName) {
+
         String description = "Zakupy w: " + storeName;
         String url = BANK_URL + "/card/charge?cardUid=" + cardUid + "&amount=" + amount + "&description=" + description;
-        // Wysyłamy żądanie ściągnięcia kasy do Banku
-        return restTemplate.postForEntity(url, null, String.class);
+
+        if (pin != null && !pin.isEmpty()) {
+            url += "&pin=" + pin;
+        }
+
+        try {
+            // Próba uderzenia do Banku
+            return restTemplate.postForEntity(url, null, String.class);
+        } catch (org.springframework.web.client.HttpStatusCodeException e) {
+            // Jeśli Bank zwróci błąd (np. 400 NO_FUNDS, 401 INVALID_PIN), przekazujemy go do WPF!
+            System.out.println(e.getResponseBodyAsString());
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("ERROR_CONNECTION");
+        }
     }
 
 
