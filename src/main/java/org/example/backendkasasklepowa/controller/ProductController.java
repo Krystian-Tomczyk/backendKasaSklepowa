@@ -99,18 +99,6 @@ public class ProductController {
 
     // --- ENDPOINTY POŚREDNICZĄCE DLA KASY WPF ---
 
-    @PostMapping("/blik/initiate")
-    public ResponseEntity<String> initiateBlik(@RequestParam String code, @RequestParam BigDecimal amount, @RequestParam String storeName) {
-        String url = BLIK_URL + "/initiate?code=" + code + "&amount=" + amount + "&storeName=" + storeName;
-        return restTemplate.postForEntity(url, null, String.class);
-    }
-
-    @GetMapping("/blik/status/{code}")
-    public ResponseEntity<String> checkBlikStatus(@PathVariable String code) {
-        String url = BLIK_URL + "/status/" + code;
-        return restTemplate.getForEntity(url, String.class);
-    }
-
     @PostMapping("/card/charge")
     public ResponseEntity<String> processCardPayment(
             @RequestParam String cardUid,

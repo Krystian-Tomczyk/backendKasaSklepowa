@@ -36,4 +36,17 @@ public class TerminalWebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
         System.out.println("Odłączono urządzenie: " + session.getId());
     }
+
+    public static void broadcastMessage(String message) {
+        TextMessage textMessage = new TextMessage(message);
+        for (WebSocketSession s : sessions) {
+            if (s.isOpen()) {
+                try {
+                    s.sendMessage(textMessage);
+                } catch (Exception e) {
+                    System.err.println("Błąd wysyłania WS: " + e.getMessage());
+                }
+            }
+        }
+    }
 }
